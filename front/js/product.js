@@ -24,3 +24,20 @@ function displayProduct(data){
         itemcolors.append(newOption);
     };
 };
+
+const addToCart = document.getElementById("addToCart")
+
+addToCart.addEventListener("click", () => {
+    
+    alert ("ok");
+    let colors = document.getElementById ("colors");
+    console.log(colors.value);
+    let quantity = document.getElementById("quantity");
+    console.log(quantity.value);
+    console.log(productId);
+    
+    localStorage.setItem ("colors",JSON.stringify(colors.value));
+    localStorage.setItem ("quantity",JSON.stringify(quantity.value));
+    localStorage.setItem ("id",JSON.stringify(productId));
+
+})
