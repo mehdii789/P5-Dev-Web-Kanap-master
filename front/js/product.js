@@ -1,3 +1,5 @@
+
+
 const itemPrice = document.querySelector('#price');
 const itemDescription = document.querySelector('#description');
 const itemcolors = document.querySelector('#colors');
@@ -29,15 +31,24 @@ const addToCart = document.getElementById("addToCart")
 
 addToCart.addEventListener("click", () => {
     
-    alert ("ok");
-    let colors = document.getElementById ("colors");
+
+    let colors = document.getElementById ("colors").value;
     console.log(colors.value);
-    let quantity = document.getElementById("quantity");
+    let quantity = document.getElementById("quantity").value;
     console.log(quantity.value);
     console.log(productId);
     
-    localStorage.setItem ("colors",JSON.stringify(colors.value));
-    localStorage.setItem ("quantity",JSON.stringify(quantity.value));
-    localStorage.setItem ("id",JSON.stringify(productId));
+    const arrayProduct = {
+        idProduit : productId,
+        color : colors,
+        quantity : quantity
+    }
 
+    localStorage.setItem ("arrayProduct",JSON.stringify(arrayProduct));
+    
+    localStorage.getItem ("arrayProduct",JSON.stringify(arrayProduct));
+ 
+
+ 
 })
+ 
