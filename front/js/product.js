@@ -38,17 +38,24 @@ addToCart.addEventListener("click", () => {
     console.log(quantity.value);
     console.log(productId);
     
-    const arrayProduct = {
+    let arrayProduct = {
         idProduit : productId,
         color : colors,
         quantity : quantity
     }
 
-    localStorage.setItem ("arrayProduct",JSON.stringify(arrayProduct));
-    
-    localStorage.getItem ("arrayProduct",JSON.stringify(arrayProduct));
- 
+let getPanier = JSON.parse(localStorage.getItem("arrayProduct")) || [];
+let foundproduct = getPanier.find(p => p.id == productId)
+    if(foundproduct != undefined){
+        foundproduct.quantity++;
+    }else{
+        productId.quantity = 1;
+        getPanier.push(arrayProduct)
+    }
 
- 
+    localStorage.setItem("arrayProduct", JSON.stringify(getPanier));
+    
 })
+
+
  

@@ -1,6 +1,10 @@
+let getPanier = JSON.parse(localStorage.getItem("arrayProduct"));
+
+console.log(getPanier)
+
 let productApi = [];
 let productStorage = [];
-const cart = []
+
 
 const numberItems = localStorage.length
 console.log ("nombre de produit = ",numberItems);
@@ -64,9 +68,9 @@ function searchApi () {
     .then((data) => showData(data));
     }
 
-    function showDetails(productApi, productStorage){
-        for(let i = 0; i < productApi.length; i++){
-    
+    function showDetails(){
+        for(let i = 0; i < getPanier.length; i++){
+            console.log(getPanier.length)
             let productArticle = document.createElement("article");
             productArticle.className = "cart__item"
             document.querySelector("#cart__items").appendChild(productArticle);
