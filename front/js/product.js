@@ -44,18 +44,21 @@ addToCart.addEventListener("click", () => {
         quantity : quantity
     }
 
-let getPanier = JSON.parse(localStorage.getItem("arrayProduct")) || [];
-let foundproduct = getPanier.find(p => p.id == productId)
+let getPanier = JSON.parse(localStorage.getItem("arrayProduct")) || []; 
+
+    let foundproduct = getPanier.find(p => p.id = productId)
     if(foundproduct != undefined){
         foundproduct.quantity++;
     }else{
-        productId.quantity = 1;
+
         getPanier.push(arrayProduct)
     }
-
+    
     localStorage.setItem("arrayProduct", JSON.stringify(getPanier));
     
 })
+
+
 
 
  
