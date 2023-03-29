@@ -46,15 +46,27 @@ addToCart.addEventListener("click", () => {
 
 let getPanier = JSON.parse(localStorage.getItem("arrayProduct")) || []; 
 
-    let foundproduct = getPanier.find(p => p.id = productId)
-    if(foundproduct != undefined){
-        foundproduct.quantity++;
+
+
+
+    let foundproduct  = getPanier.find((p) => p.id === arrayProduct.id && p.color === arrayProduct.color)
+    
+
+    if(foundproduct){
+        alert ("foundproduct")
+        let newQuantity = Number(foundproduct.quantity) + Number(quantity);
+        quantity = newQuantity;
+        console.log(quantity);
+        let storage = localStorage.setItem("arrayProduct", JSON.stringify(getPanier));
+        console.log(storage);
+        
     }else{
 
         getPanier.push(arrayProduct)
     }
-    
+
     localStorage.setItem("arrayProduct", JSON.stringify(getPanier));
+
     
 })
 
