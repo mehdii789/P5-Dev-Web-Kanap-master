@@ -1,12 +1,12 @@
     function basketEmpty(){
-    document.querySelector('.cartAndFormContainer h1').innerHTML = 'Votre panier est vide.';
+    document.querySelector('.cartAndFormContainer h1').textContent = 'Votre panier est vide.';
     document.querySelector('.cart').style.display = 'none';
 };
 
      function saveBasket(basket){
     localStorage.setItem('basket', JSON.stringify(basket));
 };
-
+//renvoie la valeur de l'élément de l'objet de stockage spécifié//
      function getBasket(){
     let basket = localStorage.getItem('basket');
     if(basket == null){
@@ -42,6 +42,13 @@
 
     saveBasket(basket);
 };
+
+//Formulaire
+
+function saveForm(formValue){
+    localStorage.setItem('form', JSON.stringify(formValue));
+};
+
 
 let productApi = [];
 let productStorage = [];
@@ -99,16 +106,15 @@ function showDetails(productApi, productStorage){
 
         let productTitle = document.createElement("h2");
         productItemContentTitlePrice.appendChild(productTitle);
-        productTitle.innerHTML = `${productApi[i].name}`;
+        productTitle.textContent = `${productApi[i].name}`;
 
         let productColor = document.createElement("p");
         productTitle.appendChild(productColor);
-        productColor.innerHTML = `${productStorage[i].color}`;
-        //productColor.style.fontSize = "20px";
+        productColor.textContent = `${productStorage[i].color}`;
 
         let productPrice = document.createElement("p");
         productItemContentTitlePrice.appendChild(productPrice);
-        productPrice.innerHTML = `${productApi[i].price} €`;
+        productPrice.textContent = `${productApi[i].price} €`;
 
         let productItemContentSettings = document.createElement("div");
         productItemContent.appendChild(productItemContentSettings);
@@ -120,7 +126,7 @@ function showDetails(productApi, productStorage){
 
         let productQty = document.createElement("p");
         productItemContentSettingsQuantity.appendChild(productQty);
-        productQty.innerHTML = "Qté : ";
+        productQty.textContent = "Qté : ";
 
         let productQuantity = document.createElement("input");
         productItemContentSettingsQuantity.appendChild(productQuantity);
@@ -138,14 +144,15 @@ function showDetails(productApi, productStorage){
         let productSupprimer = document.createElement("p");
         productItemContentSettingsDelete.appendChild(productSupprimer);
         productSupprimer.className = "deleteItem";
-        productSupprimer.innerHTML = "Supprimer";
+        productSupprimer.textContent = "Supprimer";
   
         //Total product quantity
         totalProductsQuantity += productStorage[i].quantity;
-        document.getElementById("totalQuantity").innerHTML = totalProductsQuantity;
+        document.getElementById("totalQuantity").textcontent = totalProductsQuantity;
+        
         //Total product price
         totalProductsPrice += productStorage[i].quantity * productApi[i].price;
-        document.getElementById("totalPrice").innerHTML = totalProductsPrice;
+        document.getElementById("totalPrice").textContent = totalProductsPrice;
 
         changeTotal(productApi);
 
@@ -154,6 +161,7 @@ function showDetails(productApi, productStorage){
         function changeTotal(productApi){
             let basket = getBasket();
             let allInputQuantity = document.querySelectorAll('.itemQuantity');
+            //La méthode forEach()permet d'exécuter une fonction donnée sur chaque élément du tableau
             allInputQuantity.forEach(input => {
                 input.addEventListener('change', e => {
                     let targetProduct = e.target.closest("article");
@@ -195,9 +203,9 @@ function showDetails(productApi, productStorage){
                     
                     //Nouvelle quantité totale
                     totalProductsQuantity = newTotalProduct;
-                    document.getElementById("totalQuantity").innerHTML = totalProductsQuantity;
+                    document.getElementById("totalQuantity").textContent = totalProductsQuantity;
                     //Nouveau prix total
-                    document.getElementById("totalPrice").innerHTML = totalProductsPrice;
+                    document.getElementById("totalPrice").textContent = totalProductsPrice;
                 })
             })
         }
@@ -217,6 +225,136 @@ function deleteProduct(){
         }); 
     });
 };
+
+//Message envoyé si l'entrée est vide lors de l'envoi du formulaire
+function inputEmpty(errorMsg, input){
+    errorMsg.textContent = 'Veuillez renseigner ce champ.';
+    input.classList.add('showInputError')
+    setTimeout(() => {
+        errorMsg.textContent = '';
+        input.classList.remove('showInputError')
+    }, 3000);
+};
+
+//Message envoyé si la valeur n'est pas correcte
+let errorMessage = [];
+let message = {
+    name : 'Minimum 3 caractères, maximum 15 caractères. Les chiffres et caractères spéciaux différents de - ne sont pas autorisés',
+    address : `Minimum 10 caractères, maximum 50 caractères. Les caractères spéciaux différents de , . ' - ne sont pas autorisés.`,
+    city : 'Minimum 3 caractères, maximum 15 caractères. Les chiffres et caractères spéciaux ne sont pas autorisés',
+    email : 'Veuillez renseigner une adresse mail valide.'
+};
+errorMessage.push(message);
+function inputNotValid(input, errorMsg, msg){
+    errorMsg.textContent = msg;
+    input.classList.add('showInputError');
+    setTimeout(() => {
+        errorMsg.textContent = '';
+        input.classList.remove('showInputError')
+    }, 8000);
+};
+
+document.querySelector('.cart__order__form').addEventListener('submit', (e) => {
+    
+    
+
+    let formValue = {
+        firstName : document.querySelector('#firstName').value,
+        lastName : document.querySelector('#lastName').value,
+        address : document.querySelector('#address').value,
+        city : document.querySelector('#city').value,
+        email : document.querySelector('#email').value
+    };
+
+    let inputValidation = {
+        firstName : false,
+        lastName : false,
+        address : false,
+        city : false,
+        email : false
+    };
+
+
+    if(formValue.firstName == ''){
+        inputEmpty(document.querySelector('#firstNameErrorMsg'), document.querySelector('#firstName'));
+    } else if(!/^([A-Za-z|\s]{3,15})?([-]{0,1})?([A-Za-z|\s]{3,15})$/.test(formValue.firstName)){
+        inputNotValid(document.querySelector('#firstName'), document.querySelector('#firstNameErrorMsg'), errorMessage[0].name);
+    } else {
+        inputValidation.firstName = true;
+    };
+
+    if(formValue.lastName == ''){
+        inputEmpty(document.querySelector('#lastNameErrorMsg'), document.querySelector('#lastName'));
+    } else if(!/^([A-Za-z|\s]{3,15})?([-]{0,1})?([A-Za-z|\s]{3,15})$/.test(formValue.lastName)){
+        inputNotValid(document.querySelector('#lastName'), document.querySelector('#lastNameErrorMsg'), errorMessage[0].name);   
+    } else {
+        inputValidation.lastName = true;
+    };
+
+    if(formValue.address == ''){
+        inputEmpty(document.querySelector('#addressErrorMsg'), document.querySelector('#address'));
+    } else if(!/^[a-zA-Z0-9\s,.'-]{10,50}$/.test(formValue.address)){
+        inputNotValid(document.querySelector('#address'), document.querySelector('#addressErrorMsg'), errorMessage[0].address);   
+    } else {
+        inputValidation.address = true;
+    };
+
+    if(formValue.city == ''){
+        inputEmpty(document.querySelector('#cityErrorMsg'), document.querySelector('#city'));
+    } else if(!/^([a-zA-Z|\s]{3,15})?([-]{0,1})$/.test(formValue.city)){
+        inputNotValid(document.querySelector('#city'), document.querySelector('#cityErrorMsg'), errorMessage[0].city);  
+    } else {
+        inputValidation.city = true;
+    };
+
+    if(formValue.email == ''){
+        inputEmpty(document.querySelector('#emailErrorMsg'), document.querySelector('#email'));
+    } else if(!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formValue.email)){
+        inputNotValid(document.querySelector('#email'), document.querySelector('#emailErrorMsg'), errorMessage[0].email);  
+    } else {
+        inputValidation.email = true;
+    };
+
+    if(inputValidation.firstName && inputValidation.lastName &&  inputValidation.address && inputValidation.city && inputValidation.email){
+        saveForm(formValue);
+        sendForm(formValue);
+    }
+}); 
+
+//Envoyer les informations du panier et des produits du formulaire au serveur pour récupérer l'identifiant de la commande.
+function sendForm(formValue){
+
+    let productInStorage = getBasket();
+    let products = [];
+    for(let product of productInStorage){
+        products.push(product.id)
+    }
+
+    let contact = formValue;
+
+    const sendFormData = {
+        contact,
+        products,
+      }
+
+      const options = {
+        //method: 'POST' sert a envoyer des données à un serveur  .//
+        method: 'POST',
+        body: JSON.stringify(sendFormData),
+        headers: { 
+            //Le type de média de toute ressource est déclaré dans la Content-Type propriété de l'en-tête de la requête //
+          'Content-Type': 'application/json',
+          // application/json est un type de médias sous application
+        }
+      };
+
+    fetch("http://localhost:3000/api/products/order", options)
+        .then(response => response.json())
+            .then(data => {
+                document.location.href =`confirmation.html?id=${data.orderId}`;
+                localStorage.clear();
+    });
+};      
 
 
 

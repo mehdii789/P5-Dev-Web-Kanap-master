@@ -44,26 +44,29 @@ fetch(`http://localhost:3000/api/products/${productId}`)
         } else {
             console.log('Retour du serveur : ', res.status);
             const infoError = document.querySelector('.item');
-            infoError.innerHTML = `<h1>Le produit est introuvable...</h1>`;
+            infoError.textContent = `<h1>Le produit est introuvable...</h1>`;
         }
     });
 
 //Afficher les informations dans la page
 function displayProduct(data){
     itemImg.appendChild(document.createElement('img')).src = data.imageUrl;
-    itemTitle.innerHTML = data.name;
-    itemPrice.innerHTML = data.price;
-    itemDescription.innerHTML = data.description;
+    itemTitle.textContent = data.name;
+    itemPrice.textContent = data.price;
+    itemDescription.textContent = data.description;
     for(let color of data.colors){
         let newOption = document.createElement('option');
-        newOption.innerHTML = `<option value="${color}">${color}</option>`;
+        newOption.textContent = color;
         itemcolors.append(newOption);
     };
     getchosenProducts(data);
 };
-
+//les classes créer des objets avec des propriétés et des méthodes//
 class optionsProductSelected {
+    //Un constructeur est une fonction spéciale qui est utilisée pour initialiser un objet,//
+    //Le rôle du constructeur est de définir les propriétés initiales de l'objet.//
     constructor(id, quantity, color){
+        //this fait référence à l' objet 
         this.id = id, 
         this.quantity = Number(quantity),
         this.color = color
@@ -77,9 +80,10 @@ function getchosenProducts(data){
             const itemQuantity = document.getElementById('quantity').value;
 
             if(itemQuantity <= 0 ){
-                infoError.innerHTML = '<p>Veuillez choisir une quantité</p>';
+                infoError.textContent = '<p>Veuillez choisir une quantité</p>';
                 showError(infoError);
             } else {
+                //new permet d'instentié//
                 const productSelected = new optionsProductSelected(data._id, itemQuantity, itemcolors.value);  
                 addBasket(productSelected);
                 
